@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_pie_chart"
+    tool:context="org.androidtown.dietapp.ViewCalendarActivity">
+
+    <org.androidtown.chart.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttons_in_view_chart"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:aboutTextColor="@color/colorPrimary"
+        app:centerColor="@color/colorAccent"
+        app:chartColor="#0D47A1"
+        app:equalPartition="false"
+        app:textColor="@color/colorAccent"
+      />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/buttons_in_view_chart"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+        <Button
+            android:id="@+id/button_to_chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="돌아가기"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
