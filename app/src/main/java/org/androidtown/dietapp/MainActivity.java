@@ -90,8 +90,10 @@ public class MainActivity extends AppCompatActivity {
         if(user==null) {
             Intent AuthIntent = new Intent(MainActivity.this,EmailPasswordActivity.class);
             startActivity(AuthIntent);
+
         }
         else {
+
             myRef=database.getReference().child("user").child(user.getUid());
             baseCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
             userHistoryRef=myRef.child("history");
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
     private void setProgress()
     {
+        if(baseCalRef==null)return;
         baseCalRef.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -209,8 +212,10 @@ public class MainActivity extends AppCompatActivity {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22
     //아래함수와 유사하게 나의 UserItem을 가져와서 pbar와 관련된 처리도 해야하고
     //위와 마찬가지로 음식의 목록을 푸드 트리에서 찾아가거나 아에 history가 FoodItem의 어레이리스트 여야한다.
+
     private void updateUIDList() {
         //차일드 리스너로 바꾸는게 적당할듯? -> 바꾸면 에러 쌈박하게 터짐
+        if(userHistoryRef==null)return;
         userHistoryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -230,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     //나의 유저정보를 어떻게 가져올까? 배열로 가져오는데 나는 무슨 배열로 받아야 알수있을까?
     //user 노드에서 usetsItem을 배열로 가져와서 그 중에 uid가 같은걸 찾아서 붙여야 하는듯?
     //만약 그런거면 아래 래퍼런스에 리스너 선언 부분을 바꾸어야함

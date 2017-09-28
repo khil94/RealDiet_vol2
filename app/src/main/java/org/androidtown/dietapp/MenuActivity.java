@@ -33,17 +33,21 @@ public class MenuActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-/*
+
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
         database = FirebaseDatabase.getInstance();
-        userHistoryRef =database.getReference().child("user").child("QieIMbdw8nUWSPV74dAnj9r590r1").child("history");
+        userHistoryRef =database.getReference().child("user").child(user.getUid()).child("history");
+
         uidList=new ArrayList<>();
+
         recyclerView=(RecyclerView)findViewById(R.id.user_list);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager lim = new LinearLayoutManager(this);
         lim.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(lim);
+
         updateUIDList();
         adapter = new FoodAdapter(uidList);
         recyclerView.setAdapter(adapter);
@@ -62,9 +66,9 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
         };
-        */
+
     }
-    /*
+
     private void updateUIDList() {
         //차일드 리스너로 바꾸는게 적당할듯? -> 바꾸면 에러 쌈박하게 터짐
         userHistoryRef.addValueEventListener(new ValueEventListener() {
@@ -85,5 +89,5 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
     }
-    */
+
 }
