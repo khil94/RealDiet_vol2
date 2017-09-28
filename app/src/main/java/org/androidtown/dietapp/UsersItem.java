@@ -1,5 +1,8 @@
 package org.androidtown.dietapp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by azxca on 2017-09-19.
  */
@@ -13,9 +16,9 @@ public class UsersItem {
     private int basicCalorie;
     private String gender;
 
+
     public UsersItem() {
     }
-
     public UsersItem(String email, String UID, String name, int age, int weight, int basicCalorie, String gender) {
         this.email = email;
         this.UID = UID;
@@ -81,4 +84,6 @@ public class UsersItem {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+
 }

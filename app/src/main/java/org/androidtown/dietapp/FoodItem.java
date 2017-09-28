@@ -83,4 +83,14 @@ public class FoodItem {
     public void setProtein(int protein) {
         this.protein = protein;
     }
+
+    public String getUid()
+    {
+        return uid;
+    }
+
+    public void setUid(String uid)
+    {
+        this.uid=uid;
+    }
 }
