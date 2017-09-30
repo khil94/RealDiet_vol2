@@ -6,66 +6,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by azxca on 2017-09-21.
- */
-
-/**
- *  현재 예시로 보여주는 부분
- *  UserModel을 DB에 전달해주는 매체 DTO로 구현
- *  후에 FOODITEM이든 USERITEM이든 넣을수 있음
- **/
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
 
-    //    private List<UserModel> list; 원본
-    //   private List<FoodItem> list;
-    private List<String> uidList;
-
-    /* 원본
-    public UserAdapter(List<UserModel> list) {
-        this.list = list;
-    }
-    */
-    /* 수정
-    public FoodAdapter(List<FoodItem> list) {
-        this.list=list;
-
-    }
-*/
-    public FoodAdapter(List<String> uidList) {
-        this.uidList=uidList;
+    private List<FoodItem> foodList;
+    public FoodAdapter(ArrayList<FoodItem> foodList) {
+        this.foodList = foodList;
 
     }
 
-    public void setUidList(List<String> uidList) {
-        this.uidList = uidList;
+    public void setUidList(ArrayList<FoodItem> foodList) {
+        this.foodList =foodList;
     }
 
     @Override
     public FoodViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new FoodViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item,parent,false));
+        return new FoodViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_list_menu,parent,false));
     }
 
     @Override
     public void onBindViewHolder(final FoodViewHolder holder, int position) {
-        //  UserModel user= list.get(position);원본
-        //   FoodItem user = list.get(position); 수정
-        String user = uidList.get(position);
+        FoodItem foodItem = foodList.get(position);
 
-        /*원본
-        holder.textName.setText(user.firstName + " " + user.lastName );
-        holder.textAge.setText(user.age+"");
-        holder.textJob.setText(user.job);
-        */
-        //     holder.textName.setText(user.getName()); 수정
-        //    holder.textCal.setText(user.getCalorie()); 수정
+        holder.textName.setText("이름: "+foodItem.getName());
+        holder.textCategory.setText("카테고리: "+foodItem.getCategory());
+        holder.textCal.setText("칼로리: "+String.valueOf(foodItem.getCalorie()));
+        holder.textProtain.setText("단백질: "+String.valueOf(foodItem.getProtein()));
+        holder.textCarbohydrate.setText("탄수화물: "+String.valueOf(foodItem.getCarbohydrate()));
+        holder.textFat.setText("지방: "+String.valueOf(foodItem.getFat()));
 
-
-        holder.textName.setText(user);
-        holder.textCal.setText("20");
     }
 
         /* 머름
@@ -83,20 +55,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public int getItemCount() {
-        //    return list.size(); 수정
-        return uidList.size();
+        return foodList.size();
     }
 
     class FoodViewHolder extends RecyclerView.ViewHolder{
-        TextView textName,textCal;
+        TextView textName,textCategory,textCal,textProtain,textCarbohydrate,textFat;
 
         public FoodViewHolder(View itemView){
             super(itemView);
 
-            //    textAge=(TextView)itemView.findViewById(R.id.text_age);
-            textName=(TextView)itemView.findViewById(R.id.text_name);
-            textCal=(TextView)itemView.findViewById(R.id.text_cal);
-            //    textJob=(TextView)itemView.findViewById(R.id.text_job);
+            textName=(TextView)itemView.findViewById(R.id.foodName);
+            textCategory=(TextView)itemView.findViewById(R.id.foodCategory);
+            textCal=(TextView)itemView.findViewById(R.id.foodCal);
+            textProtain=(TextView)itemView.findViewById(R.id.foodProtain);
+            textCarbohydrate=(TextView)itemView.findViewById(R.id.foodCarbohydrate);
+            textFat=(TextView)itemView.findViewById(R.id.foodFat);
         }
     }
 }
