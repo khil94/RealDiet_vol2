@@ -181,7 +181,9 @@ public class MainActivity extends AppCompatActivity {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
     private void setProgress()
     {
-        if(baseCalRef==null)return;
+        if(baseCalRef==null){
+            return;
+        }
         baseCalRef.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -215,13 +217,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUIDList() {
         //차일드 리스너로 바꾸는게 적당할듯? -> 바꾸면 에러 쌈박하게 터짐
-        if(userHistoryRef==null)return;
+        if(userHistoryRef==null){
+            return;
+        }
         userHistoryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 uidList.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren())
-                {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String uid = snapshot.getValue(String.class);
                     uidList.add(uid);
                     calculateTodayCal();

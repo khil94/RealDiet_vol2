@@ -1,5 +1,7 @@
 package org.androidtown.dietapp;
 
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,16 +19,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class MenuActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference userHistoryRef;
-    View.OnClickListener listener;
-    Button buttonSearch;
-    RecyclerView recyclerView;
-    ArrayList<String> uidList;
-    FoodAdapter adapter;
+    private DatabaseReference foodRef;
+    private  View.OnClickListener listener;
+    private Button buttonSearch;
+    private RecyclerView recyclerView;
+    private FoodAdapter adapter;
     private FirebaseUser user;
+    private ArrayList<FoodItem> foodItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,8 +46,9 @@ public class MenuActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         userHistoryRef =database.getReference().child("user").child(user.getUid()).child("history");
+        foodRef = database.getReference().child("food");
 
-        uidList=new ArrayList<>();
+        foodItemList = new ArrayList<FoodItem>();
 
         recyclerView=(RecyclerView)findViewById(R.id.user_list);
         recyclerView.setHasFixedSize(true);
@@ -48,17 +56,16 @@ public class MenuActivity extends AppCompatActivity {
         lim.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(lim);
 
-        updateUIDList();
-        adapter = new FoodAdapter(uidList);
+        adapter = new FoodAdapter(foodItemList);
         recyclerView.setAdapter(adapter);
+        updateFoodList();
 
         buttonSearch=(Button)findViewById(R.id.buttonSearch);
         listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                switch (v.getId())
-                {
+                switch (v.getId()) {
                     case R.id.buttonSearch:
                         //나중에 검색버튼으로 추가
                         Toast.makeText(MenuActivity.this, "검색되었습니다", Toast.LENGTH_SHORT).show();
@@ -69,16 +76,19 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
-    private void updateUIDList() {
-        //차일드 리스너로 바꾸는게 적당할듯? -> 바꾸면 에러 쌈박하게 터짐
-        userHistoryRef.addValueEventListener(new ValueEventListener() {
+    private  void updateFoodList(){
+        if(foodRef == null){
+            return;
+        }
+        foodRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                uidList.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren())
-                {
-                    String uid = snapshot.getValue(String.class);
-                    uidList.add(uid);
+                foodItemList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    FoodItem foodItem = snapshot.getValue(FoodItem.class);
+                    if(foodItem!= null) {
+                        foodItemList.add(foodItem);
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -88,6 +98,7 @@ public class MenuActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 }
