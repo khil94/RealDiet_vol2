@@ -1,5 +1,6 @@
 package org.androidtown.dietapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,17 +30,20 @@ public class UserInfoActivity extends AppCompatActivity {
     EditText editTextGender;
 
     Button buttonSubmit;
+    Button buttonSignIn;
 
     DatabaseReference mRoofRef;
     DatabaseReference mUserRef;
+    String uid;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String uid=user.getUid();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        uid=user.getUid();
         mRoofRef = FirebaseDatabase.getInstance().getReference();
         mUserRef=mRoofRef.child("user").child(uid);
 
@@ -56,6 +60,7 @@ public class UserInfoActivity extends AppCompatActivity {
         editTextGender=(EditText)findViewById(R.id.editTextGender);
 
         buttonSubmit=(Button)findViewById(R.id.buttonSubmit);
+        buttonSignIn=(Button)findViewById(R.id.buttonSignin);
 
         mUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,6 +92,15 @@ public class UserInfoActivity extends AppCompatActivity {
                 int basicCalorie = Integer.parseInt(editTextBasicCalorie.getText().toString());
                 String gender = editTextGender.getText().toString();
                 mUserRef.setValue(new UsersItem(email, uid, name, age, weight, basicCalorie, gender));
+                finish();
+            }
+        });
+
+        buttonSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent AuthIntent = new Intent(UserInfoActivity.this,EmailPasswordActivity.class);
+                startActivity(AuthIntent);
                 finish();
             }
         });
