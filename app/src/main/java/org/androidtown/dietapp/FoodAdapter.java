@@ -1,10 +1,14 @@
 package org.androidtown.dietapp;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,12 @@ import java.util.List;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
 
     private List<FoodItem> foodList;
+
+    public void setHistoryRef(DatabaseReference historyRef) {
+        this.historyRef = historyRef;
+    }
+
+    private DatabaseReference historyRef;
     public FoodAdapter(ArrayList<FoodItem> foodList) {
         this.foodList = foodList;
 
@@ -31,7 +41,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public void onBindViewHolder(final FoodViewHolder holder, int position) {
         FoodItem foodItem = foodList.get(position);
 
-        holder.textName.setText("이름: "+foodItem.getName());
+        holder.textName.setText(foodItem.getName());
         holder.textCategory.setText("카테고리: "+foodItem.getCategory());
         holder.textCal.setText("칼로리: "+String.valueOf(foodItem.getCalorie()));
         holder.textProtain.setText("단백질: "+String.valueOf(foodItem.getProtein()));
@@ -70,6 +80,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             textProtain=(TextView)itemView.findViewById(R.id.foodProtain);
             textCarbohydrate=(TextView)itemView.findViewById(R.id.foodCarbohydrate);
             textFat=(TextView)itemView.findViewById(R.id.foodFat);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Snackbar.make(v,textName.getText()+" 선택",Snackbar.LENGTH_LONG).setAction("add to history", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(historyRef!=null){
+                                historyRef.push().setValue(textName.getText());
+                            }
+                        }
+                    }).show();
+                }
+            });
         }
     }
 }

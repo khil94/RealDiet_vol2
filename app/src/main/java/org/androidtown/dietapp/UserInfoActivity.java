@@ -30,6 +30,7 @@ public class UserInfoActivity extends AppCompatActivity {
     EditText editTextGender;
 
     Button buttonSubmit;
+
     Button buttonSignIn;
 
     DatabaseReference mRoofRef;
