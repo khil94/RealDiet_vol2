@@ -31,7 +31,7 @@ public class MenuActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference userHistoryRef;
     private DatabaseReference foodRef;
-    private  View.OnClickListener listener;
+    private View.OnClickListener listener;
     private Button buttonSearch;
     private RecyclerView recyclerView;
     private FoodAdapter adapter;
@@ -74,7 +74,6 @@ public class MenuActivity extends AppCompatActivity {
                         Toast.makeText(MenuActivity.this, "검색되었습니다", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.user_list:
-
                 }
             }
         };
