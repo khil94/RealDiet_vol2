@@ -1,11 +1,11 @@
 package org.androidtown.dietapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     //기타 변수
     private int progress;
+    public static Context mainContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +67,14 @@ public class MainActivity extends AppCompatActivity {
             Intent AuthIntent= new Intent(MainActivity.this, EmailPasswordActivity.class);
             startActivity(AuthIntent);
             user=mAuth.getCurrentUser();
-            Log.d("fuck that한글이다", "인텐트 부분이 실행이 안됨");
         }else{
-            Log.d("fuck that한글이다", "호우 유저는 널이아냐");
+            database = FirebaseDatabase.getInstance();
+            myRef=database.getReference().child("user").child(user.getUid());
+            baseCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
+            userHistoryRef=myRef.child("history");
         }
         //건드리지 말것 끝
-
+        mainContext=this;
         //리사이클러뷰 시작
         uidList=new ArrayList<>();
         recyclerView=(RecyclerView)findViewById(R.id.user_list);
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //데이터 베이스 시작
-        database = FirebaseDatabase.getInstance();
+        if(user!=mAuth.getCurrentUser())initDatabase();
         //데이터 베이스 끝
 
 
@@ -115,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.btn_userinfo:
                         Intent AuthIntent = new Intent(MainActivity.this,UserInfoActivity.class);
                         startActivity(AuthIntent);
+                        initDatabase();
                         break;
                     case R.id.btn_menu:
                         Intent menuIntent = new Intent(MainActivity.this,MenuActivity.class);
@@ -189,4 +193,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void initDatabase(){
+        database = FirebaseDatabase.getInstance();
+        myRef=database.getReference().child("user").child(user.getUid());
+        baseCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
+        userHistoryRef=myRef.child("history");
+    }
 }

@@ -107,4 +107,10 @@ public class UserInfoActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent UserInfoIntent=new Intent(UserInfoActivity.this,MainActivity.class);
+        startActivity(UserInfoIntent);
+    }
 }
