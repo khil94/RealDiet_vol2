@@ -235,6 +235,11 @@ public class EmailPasswordActivity extends BaseActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.email_create_account_button) {

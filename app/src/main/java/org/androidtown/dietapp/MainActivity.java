@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -57,6 +58,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        //최상위 건드리지 말것 시작
+        FirebaseAuth mAuth= FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser(); //위로뺌;
+        if(user==null) {
+            Intent AuthIntent= new Intent(MainActivity.this, EmailPasswordActivity.class);
+            startActivity(AuthIntent);
+            user=mAuth.getCurrentUser();
+            Log.d("fuck that한글이다", "인텐트 부분이 실행이 안됨");
+        }else{
+            Log.d("fuck that한글이다", "호우 유저는 널이아냐");
+        }
+        //건드리지 말것 끝
+
         //리사이클러뷰 시작
         uidList=new ArrayList<>();
         recyclerView=(RecyclerView)findViewById(R.id.user_list);
@@ -77,14 +92,6 @@ public class MainActivity extends AppCompatActivity {
         chart_btn=(Button)findViewById(R.id.btn_chart);
         calorie_pbar=(ProgressBar)findViewById(R.id.pbar_calorie);
         percentage_view=(TextView)findViewById(R.id.view_percentage);
-        //현재 만지고 있는 부분 수정하지 말고 주석 풀지도 말 것
-
-        FirebaseAuth mAuth= FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser(); //위로뺌;
-        if(user==null) {
-            Intent AuthIntent = new Intent(MainActivity.this,EmailPasswordActivity.class);
-            startActivity(AuthIntent);
-        }
 
         myRef=database.getReference().child("user").child(user.getUid());
         baseCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
@@ -149,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
     //지금 현재는 음식이 데이터베이스에 들어있지 않으니 임시로 음식하나당 20cal로 계산합니당 추후 변경해야함
     private void calculateTodayCal(){
-
+        if(me==0)return;
         todayCal=uidList.size()*20;
         calorie_pbar.setMax(100);
         progress = todayCal*100;
