@@ -29,8 +29,13 @@ public class MenuActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FoodAdapter adapter;
     private FirebaseUser user;
-    private ArrayList<FoodItem> foodItemList;
-    private datastructure data;
+    public ArrayList<FoodItem> foodItemList;
+
+
+    //자료구조 데모 선언 시작
+    private DataStructure datastructure;
+    private ArrayList<FoodItem> searchedItemList;
+    //자료구조 데모 선언 끝
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,6 +52,11 @@ public class MenuActivity extends AppCompatActivity {
 
         foodItemList = new ArrayList<FoodItem>();
 
+        //자료구조 데모 init
+        datastructure=DataStructure.getInstance();
+        datastructure.setFoodList(foodItemList);
+        //자료구조 데모 init 끝
+
         recyclerView=(RecyclerView)findViewById(R.id.user_list);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager lim = new LinearLayoutManager(this);
@@ -57,9 +67,6 @@ public class MenuActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         updateFoodList();
 
-        data.getInstance();
-        data.setFoodList(foodItemList);
-
         buttonSearch=(Button)findViewById(R.id.buttonSearch);
         edit=(EditText)findViewById(R.id.edit);
 
@@ -69,9 +76,11 @@ public class MenuActivity extends AppCompatActivity {
 
                 switch (v.getId()) {
                     case R.id.buttonSearch:
-                        //나중에 검색버튼으로 추가
-                        Toast.makeText(MenuActivity.this, "검색되었습니다", Toast.LENGTH_SHORT).show();
-                        data.search(edit.getText().toString());
+                        //검색이 됨 그리고 반환을 searchedItemList로 반환
+                        // 그 이후로 어댑터 추가는 태현이가 찡긋
+                        searchedItemList=datastructure.search(edit.getText().toString());
+                        String name=searchedItemList.get(0).getName();
+                        Toast.makeText(MenuActivity.this, name, Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.user_list:
                 }
@@ -121,6 +130,10 @@ public class MenuActivity extends AppCompatActivity {
                         foodItemList.add(foodItem);
                     }
                 }
+                //sort부분 시작
+                //data의 수정이 일어날때 마다 sorting 함
+                datastructure.sort();
+                //sort부분 끝
                 adapter.notifyDataSetChanged();
             }
 
