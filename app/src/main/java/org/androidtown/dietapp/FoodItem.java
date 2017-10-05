@@ -2,10 +2,6 @@ package org.androidtown.dietapp;
 
 import android.support.annotation.NonNull;
 
-import com.google.firebase.database.DatabaseReference;
-
-import java.util.UUID;
-
 /**
  * Created by latitude7275 on 2017-09-14.
  */
@@ -23,8 +19,8 @@ public class FoodItem implements Comparable<FoodItem>{
 
     }
 
-    public FoodItem(String category, String name,int calorie, int carbohydrate, int protein, int fat) {
-        uid= UUID.randomUUID().toString();
+    public FoodItem(String uid,String category, String name,int calorie, int carbohydrate, int protein, int fat) {
+        this.uid=uid;
         this.category = category;
         this.name = name;
         this.fat = fat;
@@ -37,11 +33,6 @@ public class FoodItem implements Comparable<FoodItem>{
     public int compareTo(@NonNull FoodItem o) {
         return o.getName().compareTo(this.name);
     }
-
-    public void SendtoFirebase(DatabaseReference mRFood){
-        mRFood.child(uid).setValue(this);
-    }
-
 
     //getter setter start
 

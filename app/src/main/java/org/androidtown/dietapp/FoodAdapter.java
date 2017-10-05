@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 
@@ -17,6 +16,10 @@ import java.util.List;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
 
     private List<FoodItem> foodList;
+
+    public void setFoodList(List<FoodItem> foodList) {
+        this.foodList = foodList;
+    }
 
     public void setHistoryRef(DatabaseReference historyRef) {
         this.historyRef = historyRef;

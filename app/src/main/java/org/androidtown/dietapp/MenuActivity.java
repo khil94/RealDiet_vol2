@@ -1,5 +1,6 @@
 package org.androidtown.dietapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +25,7 @@ public class MenuActivity extends AppCompatActivity {
     private DatabaseReference foodRef;
     private View.OnClickListener listener;
     private Button buttonSearch;
+    private Button buttonAddMenu;
     private EditText edit;
     private RecyclerView recyclerView;
     private FoodAdapter adapter;
@@ -68,8 +69,15 @@ public class MenuActivity extends AppCompatActivity {
         updateFoodList();
 
         buttonSearch=(Button)findViewById(R.id.buttonSearch);
+        buttonAddMenu=(Button)findViewById(R.id.buttonAddMenu);
         edit=(EditText)findViewById(R.id.edit);
-
+        buttonAddMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addIntent = new Intent(MenuActivity.this,ItemAddActivity.class);
+                startActivity(addIntent);
+            }
+        });
         listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,10 +85,11 @@ public class MenuActivity extends AppCompatActivity {
                 switch (v.getId()) {
                     case R.id.buttonSearch:
                         //검색이 됨 그리고 반환을 searchedItemList로 반환
-                        // 그 이후로 어댑터 추가는 태현이가 찡긋
+                        //
                         searchedItemList=datastructure.search(edit.getText().toString());
-                        String name=searchedItemList.get(0).getName();
-                        Toast.makeText(MenuActivity.this, name, Toast.LENGTH_SHORT).show();
+                        adapter.setFoodList(searchedItemList);
+                        adapter.notifyDataSetChanged();
+                        //adapter.setFoodList(foodItemList);
                         break;
                     case R.id.user_list:
                 }
