@@ -96,11 +96,6 @@ public class MainActivity extends AppCompatActivity {
         calorie_pbar=(ProgressBar)findViewById(R.id.pbar_calorie);
         percentage_view=(TextView)findViewById(R.id.view_percentage);
 
-        myRef=database.getReference().child("user").child(user.getUid());
-        baseCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
-        userHistoryRef=myRef.child("history");
-
-
         adapter = new HistoryAdapter(uidList);
         recyclerView.setAdapter(adapter);
         updateUIDList();
@@ -119,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent AuthIntent = new Intent(MainActivity.this,UserInfoActivity.class);
                         startActivity(AuthIntent);
                         initDatabase();
+                        finish();
                         break;
                     case R.id.btn_menu:
                         Intent menuIntent = new Intent(MainActivity.this,MenuActivity.class);
