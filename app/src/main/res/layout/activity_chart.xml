@@ -11,7 +11,7 @@
         android:layout_weight="1"
 
         android:minDate="01/01/2017"
-        android:maxDate="12/31/2017"
+        android:maxDate="12/31/2099"
 
         android:weekSeparatorLineColor="#00ff00"
         android:focusedMonthDateColor="#ff0000"
@@ -22,22 +22,17 @@
         />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
 
         <Button
+            android:id="@+id/button_to_all_chart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/button_main"
-            android:text="메인"
-            />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="전체보기"
-            />
+            android:text="전체보기" />
 
     </LinearLayout>
 

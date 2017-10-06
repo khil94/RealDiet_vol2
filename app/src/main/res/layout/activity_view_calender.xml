@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/activity_pie_chart"
-    tool:context="org.androidtown.dietapp.ViewCalendarActivity">
+    tool:context="org.androidtown.dietapp.Chart.ViewCalendarActivity"
+    android:weightSum="1">
 
     <org.androidtown.chart.PieChart
         android:id="@+id/pie_chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="353dp"
         android:layout_above="@+id/buttons_in_view_chart"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -20,25 +22,17 @@
         app:chartColor="#0D47A1"
         app:equalPartition="false"
         app:textColor="@color/colorAccent"
-      />
+        android:layout_weight="0.61" />
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_of_history_of_chosen_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/buttons_in_view_chart"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
-        <Button
-            android:id="@+id/button_to_chart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:text="돌아가기"
-            />
-
-    </LinearLayout>
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"></android.support.v7.widget.RecyclerView>
 
 
-</RelativeLayout>
+</LinearLayout>

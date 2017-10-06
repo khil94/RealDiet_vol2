@@ -1,23 +1,36 @@
-package org.androidtown.dietapp;
+package org.androidtown.dietapp.Chart;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.androidtown.chart.ChartData;
 import org.androidtown.chart.PieChart;
+import org.androidtown.dietapp.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zidru on 2017-09-18.
  */
 
-public class ViewCalendarActivity extends Activity {
+public class ViewCalendarActivity extends AppCompatActivity {
+    private DatabaseReference mDatabase;
     PieChart pieChart;
     float carbo, protein, fat, sum;
     float rat_carbo, rat_protein, rat_fat;
@@ -25,9 +38,30 @@ public class ViewCalendarActivity extends Activity {
     View.OnClickListener listener;
 
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_calender);
         pieChart = (PieChart) findViewById(R.id.pie_chart);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+       /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference userData = mDatabase.child("user").child(user.getUid());
+        DatabaseReference userHistoryRef = userData.child("history").getRef();
+        List<String> userHistoryData = null;
+
+        userHistoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userHistoryData.clear();
+                for(DataSnapshot snap : dataSnapshot.getChildren()){
+                    userHistoryData.add(snap.getValue(String.class));
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });  */
 
         Intent intent = getIntent();
         int yaer = intent.getExtras().getInt("Year");
@@ -50,21 +84,6 @@ public class ViewCalendarActivity extends Activity {
 
         pieChart.setChartData(data);
         pieChart.partitionWithPercent(true);
-
-
-        Button to_chart_button = (Button) findViewById(R.id.button_to_chart);
-        listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                switch (v.getId()) {
-                    case R.id.button_to_chart:
-                        finish();
-                        break;
-                }
-            }
-        };
-        to_chart_button.setOnClickListener(listener);
 
 
     }

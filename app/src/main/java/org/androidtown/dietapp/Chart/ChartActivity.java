@@ -1,4 +1,4 @@
-package org.androidtown.dietapp;
+package org.androidtown.dietapp.Chart;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,18 +7,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 
+import org.androidtown.dietapp.R;
+
 /**
  * Created by zidru on 2017-09-18.
  */
 
 public class ChartActivity extends Activity {
-    Button button_main;
+    Button button_to_all;
+
+    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
 
+        button_to_all = (Button) findViewById(R.id.button_to_all_chart);
+
         CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
-        button_main=(Button)findViewById(R.id.button_main);
+
         //리스너
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
@@ -31,11 +38,17 @@ public class ChartActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+
         //리스너
-        button_main.setOnClickListener(new View.OnClickListener() {
+      button_to_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                switch(v.getId()) {
+                    case R.id.button_to_all_chart:
+                        Intent intent = new Intent(ChartActivity.this, ViewAllCalendarActivity.class);
+                        startActivity(intent); break;
+                }
             }
         });
     }
