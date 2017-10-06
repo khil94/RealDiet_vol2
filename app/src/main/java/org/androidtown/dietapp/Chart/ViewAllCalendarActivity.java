@@ -1,9 +1,9 @@
 // 차트 전체보기.
 package org.androidtown.dietapp.Chart;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -20,10 +20,7 @@ import com.handstudio.android.hzgrapherlib.vo.GraphNameBox;
 import com.handstudio.android.hzgrapherlib.vo.linegraph.LineGraph;
 import com.handstudio.android.hzgrapherlib.vo.linegraph.LineGraphVO;
 
-import org.androidtown.dietapp.EmailPasswordActivity;
-import org.androidtown.dietapp.MainActivity;
 import org.androidtown.dietapp.R;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +31,7 @@ import java.util.List;
 
 public class ViewAllCalendarActivity extends AppCompatActivity{
     private ViewGroup layoutGraphView;
-    int user_calorie=500;
-
+    private int user_calorie;
     List<String> datas = new ArrayList<>();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -47,25 +43,28 @@ public class ViewAllCalendarActivity extends AppCompatActivity{
         setContentView(R.layout.activity_view_all_calendar);
         layoutGraphView = (ViewGroup)findViewById(R.id.view_all_calendar);
 
-
       TextView text = (TextView)findViewById(R.id.testtextview);
      if(user!=null) {
-       text.setText("확인");
+
 
        }else{}
          DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
          DatabaseReference userRef = RootRef.child("user").child(uid).child("basicCalorie");
          DatabaseReference historyRef = RootRef.child("user").child(uid).child("history");
+
          userRef.addValueEventListener(new ValueEventListener() {
              @Override
              public void onDataChange(DataSnapshot dataSnapshot) {
                  user_calorie = dataSnapshot.getValue(int.class);
+                 setLineGraph();
              }
              @Override
              public void onCancelled(DatabaseError databaseError) {
              }
          });
-         historyRef.addValueEventListener(new ValueEventListener() {
+        Log.d("경고", "onDataChange: "+user_calorie);
+
+        historyRef.addValueEventListener(new ValueEventListener() {
              @Override
              public void onDataChange(DataSnapshot dataSnapshot) {
                  datas.clear();
@@ -79,11 +78,11 @@ public class ViewAllCalendarActivity extends AppCompatActivity{
          }
          });
 
-        setLineGraph();
     }
 
     private void setLineGraph() {
         //all setting
+
         LineGraphVO vo = makeLineGraphAllSetting();
         layoutGraphView.addView(new LineGraphView(this, vo));
     }
@@ -92,6 +91,7 @@ public class ViewAllCalendarActivity extends AppCompatActivity{
     private LineGraphVO makeLineGraphAllSetting() {
         //BASIC LAYOUT SETTING
         //padding
+
         int paddingBottom 	= LineGraphVO.DEFAULT_PADDING;
         int paddingTop 		= LineGraphVO.DEFAULT_PADDING;
         int paddingLeft 	= LineGraphVO.DEFAULT_PADDING;
@@ -111,7 +111,8 @@ public class ViewAllCalendarActivity extends AppCompatActivity{
         //int date=datas.size();
         String[] legendArr = {"1","2"};
         int[] graph1 = {4000,2000,3000,8000,100,200};
-        int[] graph2 = {user_calorie,user_calorie,user_calorie,user_calorie,user_calorie,user_calorie};
+        int setValue=user_calorie;
+        int[] graph2 = {setValue,setValue,setValue,setValue,setValue,setValue};
 
 
         List<LineGraph> arrGraph = new ArrayList<LineGraph>();
