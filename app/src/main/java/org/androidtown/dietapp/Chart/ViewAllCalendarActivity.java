@@ -1,9 +1,15 @@
 // 차트 전체보기.
+
 package org.androidtown.dietapp.Chart;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -21,6 +27,7 @@ import com.handstudio.android.hzgrapherlib.vo.linegraph.LineGraph;
 import com.handstudio.android.hzgrapherlib.vo.linegraph.LineGraphVO;
 
 import org.androidtown.dietapp.EmailPasswordActivity;
+import org.androidtown.dietapp.FoodItem;
 import org.androidtown.dietapp.MainActivity;
 import org.androidtown.dietapp.R;
 import org.w3c.dom.Text;
@@ -32,60 +39,64 @@ import java.util.List;
  * Created by zidru on 2017-09-27.
  */
 
-public class ViewAllCalendarActivity extends AppCompatActivity{
+public class ViewAllCalendarActivity extends android.support.v4.app.Fragment{
     private ViewGroup layoutGraphView;
-    int user_calorie=500;
 
-    List<String> datas = new ArrayList<>();
+    List<FoodItem> datas = new ArrayList<>();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid=user.getUid();
+    String uid = user.getUid();
+    int user_calorie;
 
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_all_calendar);
-        layoutGraphView = (ViewGroup)findViewById(R.id.view_all_calendar);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
+        layoutGraphView = (ViewGroup) inflater.inflate(R.layout.activity_view_all_calendar, container, false);
+        if (user != null) {
+        } else {
+        }
+        DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference userRef = RootRef.child("user").child(uid).child("basicCalorie");
+        DatabaseReference historyRef = RootRef.child("userHistory").child(uid);
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user_calorie = dataSnapshot.getValue(int.class);
+                Log.d("", "");
+                setLineGraph();
+            }
 
-      TextView text = (TextView)findViewById(R.id.testtextview);
-     if(user!=null) {
-       text.setText("확인");
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        historyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                datas.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    FoodItem data = snapshot.getValue(FoodItem.class);
+                    datas.add(data);
+                }
+            }
 
-       }else{}
-         DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
-         DatabaseReference userRef = RootRef.child("user").child(uid).child("basicCalorie");
-         DatabaseReference historyRef = RootRef.child("user").child(uid).child("history");
-         userRef.addValueEventListener(new ValueEventListener() {
-             @Override
-             public void onDataChange(DataSnapshot dataSnapshot) {
-                 user_calorie = dataSnapshot.getValue(int.class);
-             }
-             @Override
-             public void onCancelled(DatabaseError databaseError) {
-             }
-         });
-         historyRef.addValueEventListener(new ValueEventListener() {
-             @Override
-             public void onDataChange(DataSnapshot dataSnapshot) {
-                 datas.clear();
-                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                     String data = snapshot.getValue(String.class);
-                     datas.add(data);
-                 }
-             }
-             @Override
-             public void onCancelled(DatabaseError databaseError) {
-         }
-         });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        return layoutGraphView;
 
-        setLineGraph();
     }
+
+
 
     private void setLineGraph() {
         //all setting
         LineGraphVO vo = makeLineGraphAllSetting();
-        layoutGraphView.addView(new LineGraphView(this, vo));
+        layoutGraphView.addView(new LineGraphView(getContext(), vo));
+    }
+    private int getUserCalorie(){
+        return user_calorie;
     }
 
 
@@ -108,10 +119,16 @@ public class ViewAllCalendarActivity extends AppCompatActivity{
         int increment 		= LineGraphVO.DEFAULT_INCREMENT;
 
         //GRAPH SETTING
-        //int date=datas.size();
-        String[] legendArr = {"1","2"};
-        int[] graph1 = {4000,2000,3000,8000,100,200};
-        int[] graph2 = {user_calorie,user_calorie,user_calorie,user_calorie,user_calorie,user_calorie};
+        int date=datas.size();
+        ViewAllCalendarActivity users = new ViewAllCalendarActivity();
+        String[] legendArr = new String[5];
+        int[] graph1 = new int[5];
+        int[] graph2 = new int[5];
+        for(int i=0; i<5;i++){
+            legendArr[i] = String.valueOf(i+1);
+            graph1[i] = 4000+(100*i);
+            graph2[i] = user_calorie;
+        }
 
 
         List<LineGraph> arrGraph = new ArrayList<LineGraph>();
