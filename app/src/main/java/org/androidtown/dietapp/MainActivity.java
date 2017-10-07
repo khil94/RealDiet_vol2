@@ -3,6 +3,7 @@ package org.androidtown.dietapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,25 +22,38 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
+    //날짜 관련
+    SimpleDateFormat dateFormat;
 
-    private DatabaseReference baseCalRef;
+    //userhistory 만들기
+    private DatabaseReference userHistoryRef;
+
+    //프로그레스바 관련
+    private DatabaseReference basicCalRef;
     int todayCal;
-    private int me;
-
+    private int basicCal;
+    private List<FoodItem> foodList;
+    private int progress;
+    //프로그레스바 끝
 
     //리사이클러 뷰 시작
     private RecyclerView recyclerView;
-    private List<String> uidList;
+    private List<FoodItem> historyList;
     private HistoryAdapter adapter;
     //리사이클러 뷰 끝
 
     //데이터베이스 시작
     private FirebaseDatabase database;
-    private DatabaseReference userHistoryRef;//history에서 음식의 목록을 임시로 가져옴 만약에 userItem을 통째로 가져온다면 필요없을 부분
-    private DatabaseReference myRef;//나이 UserItem을 가져와야 처리할수 있는 일이 많음
+    private DatabaseReference myHistoryRef;
+    private DatabaseReference myRef;
     private FirebaseUser user;
+    private DatabaseReference foodRef;
     //데이터베이스 끝
 
     //레이아웃
@@ -52,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     //레이아웃 끝
 
     //기타 변수
-    private int progress;
     public static Context mainContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        //최상위 건드리지 말것 시작
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser(); //위로뺌;
         if(user==null) {
@@ -70,13 +82,23 @@ public class MainActivity extends AppCompatActivity {
         }else{
             database = FirebaseDatabase.getInstance();
             myRef=database.getReference().child("user").child(user.getUid());
-            baseCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
-            userHistoryRef=myRef.child("history");
+            basicCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
+            myHistoryRef=myRef.child("history");
+            foodRef =database.getReference().child("food");
+            userHistoryRef = database.getReference().child("userHistory").child(user.getUid());
         }
-        //건드리지 말것 끝
+
         mainContext=this;
+        //날짜 관련
+        dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+
+
+        //전체 음식 가져오기
+        foodList = new ArrayList<>();
+        getFoodList();
+
         //리사이클러뷰 시작
-        uidList=new ArrayList<>();
+        historyList=new ArrayList<>();
         recyclerView=(RecyclerView)findViewById(R.id.user_list);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager lim = new LinearLayoutManager(this);
@@ -96,13 +118,12 @@ public class MainActivity extends AppCompatActivity {
         calorie_pbar=(ProgressBar)findViewById(R.id.pbar_calorie);
         percentage_view=(TextView)findViewById(R.id.view_percentage);
 
-        adapter = new HistoryAdapter(uidList);
+        adapter = new HistoryAdapter(historyList);
         recyclerView.setAdapter(adapter);
-        updateUIDList();
+        updateHistoryList();
         progress=0;
         setProgress();
 
-        //변경할 사항 리스트 뷰의 아이템을 눌렀을때 자세한 액티비티를 보여줄 부분이 필요함
         listener = new View.OnClickListener()
         {
             @Override
@@ -137,13 +158,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setProgress()
     {
-        if(baseCalRef==null){
+        if(basicCalRef==null){
             return;
         }
-        baseCalRef.addValueEventListener( new ValueEventListener() {
+        basicCalRef.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                me = dataSnapshot.getValue(int.class);
+                basicCal = dataSnapshot.getValue(int.class);
                 calculateTodayCal();
             }
 
@@ -154,31 +175,37 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //지금 현재는 음식이 데이터베이스에 들어있지 않으니 임시로 음식하나당 20cal로 계산합니당 추후 변경해야함
+
     private void calculateTodayCal(){
-        if(me==0)return;
-        todayCal=uidList.size()*20;
+        if(basicCal==0)return;
+        todayCal=0;
+        for(int i=0;i<historyList.size();i++){
+            int cal = historyList.get(i).getCalorie();
+            todayCal = todayCal+cal;
+        }
         calorie_pbar.setMax(100);
         progress = todayCal*100;
-        progress = progress/me;
+        progress = progress/basicCal;
         calorie_pbar.setProgress(progress);
         percentage_view.setText(progress + "%");
     }
 
-    private void updateUIDList() {
-        //차일드 리스너로 바꾸는게 적당할듯? -> 바꾸면 에러 쌈박하게 터짐
-        if(userHistoryRef==null){
+
+
+    private void updateHistoryList() {
+        if(myHistoryRef==null){
             return;
         }
-        userHistoryRef.addValueEventListener(new ValueEventListener() {
+        myHistoryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                uidList.clear();
+                historyList.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String uid = snapshot.getValue(String.class);
-                    uidList.add(uid);
-                    calculateTodayCal();
+                    FoodItem food = snapshot.getValue(FoodItem.class);
+                    historyList.add(food);
                 }
+                calculateTodayCal();
+                updateUserHistory();
                 adapter.notifyDataSetChanged();
             }
 
@@ -192,7 +219,44 @@ public class MainActivity extends AppCompatActivity {
     public void initDatabase(){
         database = FirebaseDatabase.getInstance();
         myRef=database.getReference().child("user").child(user.getUid());
-        baseCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
-        userHistoryRef=myRef.child("history");
+        basicCalRef = database.getReference().child("user").child(user.getUid()).child("basicCalorie");
+        myHistoryRef=myRef.child("history");
+        foodRef = database.getReference().child("food");
+        userHistoryRef = database.getReference().child("userHistory").child(user.getUid());
     }
+
+    //전체 음식을 가져오는 부분
+    private void getFoodList(){
+        if(foodRef == null){
+            return;
+        }
+        foodRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                foodList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    FoodItem food = snapshot.getValue(FoodItem.class);
+                    foodList.add(food);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void updateUserHistory(){
+        if(userHistoryRef != null){
+            Date date = new Date();
+            String dateStr =  dateFormat.format(date);
+            userHistoryRef.child(dateStr).removeValue();
+            for(int i =0;i<historyList.size();i++){
+                FoodItem food = historyList.get(i);
+                userHistoryRef.child(dateStr).push().setValue(food);
+            }
+        }
+    }
+
 }

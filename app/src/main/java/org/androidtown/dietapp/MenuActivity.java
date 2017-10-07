@@ -98,30 +98,6 @@ public class MenuActivity extends AppCompatActivity {
 
 
         buttonSearch.setOnClickListener(listener);
-
-    /*잠시 주석!!!!
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                View child = rv.findChildViewUnder(e.getX(),e.getY());
-                if(child != null){
-                    TextView tv = (TextView) rv.getChildViewHolder(child).itemView.findViewById(R.id.foodName);
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
-        */
     }
 
 
