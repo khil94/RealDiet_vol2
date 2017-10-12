@@ -46,7 +46,7 @@ public class ChartActivity extends Activity {
             public void onClick(View v) {
                 switch(v.getId()) {
                     case R.id.button_to_all_chart:
-                        Intent intent = new Intent(ChartActivity.this, ViewAllCalendarActivity.class);
+                        Intent intent = new Intent(ChartActivity.this, ViewHistoryDataActivity.class);
                         startActivity(intent); break;
                 }
             }

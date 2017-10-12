@@ -19,7 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MenuActivity extends AppCompatActivity {
+//가져올때 heap 구조
+ public class MenuActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference userHistoryRef;
     private DatabaseReference foodRef;
