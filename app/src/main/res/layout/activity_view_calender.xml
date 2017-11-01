@@ -10,23 +10,22 @@
     tool:context="org.androidtown.dietapp.Chart.ViewCalendarActivity"
     android:weightSum="1">
 
-    <org.androidtown.chart.PieChart
+
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/pie_chart"
         android:layout_width="match_parent"
-        android:layout_height="402dp"
+        android:layout_height="439dp"
         android:layout_above="@+id/buttons_in_view_chart"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        app:aboutTextColor="@color/colorPrimary"
-        app:centerColor="@color/colorAccent"
-        app:chartColor="#0D47A1"
-        app:equalPartition="false"
-        app:textColor="@color/colorAccent" />
+        ></android.support.constraint.ConstraintLayout>
 
 
     <TextView
         android:id="@+id/message_to_calender_viewer"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal|center_vertical" />
 
 </LinearLayout>

@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import org.androidtown.dietapp.FoodItem;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -21,12 +20,16 @@ public class DateWithFoodItem implements Comparable<DateWithFoodItem>{
         this.foods = foodItem;
         this.date = Date;
     }
+
+    // basic utils
     public void add(FoodItem food) {
         foods.add(food);
     }
     public void clear(){
         foods.clear();
     }
+
+    //getter and setter
     public int getCalories(){
         int total_calorie = 0;
         if(foods.isEmpty()){
@@ -71,27 +74,26 @@ public class DateWithFoodItem implements Comparable<DateWithFoodItem>{
         }}
         return total_protein;
     }
-
-
+    public void setFoods(ArrayList<FoodItem> foods) {
+        this.foods = foods;
+    }
+    public String getDate() {
+        return date;
+    }
+    public void setDate(String date) {
+        this.date = date;
+    }
+    public ArrayList<FoodItem> getFoods() {
+        return foods;
+    }
 
     @Override
     public int compareTo(@NonNull DateWithFoodItem o) {
         return 0;
     }
 
-    public ArrayList<FoodItem> getFoods() {
-        return foods;
-    }
 
-    public void setFoods(ArrayList<FoodItem> foods) {
-        this.foods = foods;
-    }
 
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+
 }

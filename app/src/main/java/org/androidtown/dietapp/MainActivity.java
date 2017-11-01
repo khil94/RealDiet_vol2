@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -30,8 +31,13 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "!!!!!!!!!!MAIN!!!!!";
     //날짜 관련
-    SimpleDateFormat dateFormat;
+    private long now;
+    private SimpleDateFormat dateFormat;
+    private Date date;
+    private String dateStr;
 
     //userhistory 만들기
     private DatabaseReference userHistoryRef;
@@ -92,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainContext=this;
         //날짜 관련
-        dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        getDate();
 
 
         //전체 음식 가져오기
@@ -251,14 +257,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUserHistory(){
         if(userHistoryRef != null){
-            Date date = new Date();
-            String dateStr =  dateFormat.format(date);
+            getDate();
+
+            Log.d(TAG,dateStr);
             userHistoryRef.child(dateStr).removeValue();
             for(int i =0;i<historyList.size();i++){
                 FoodItem food = historyList.get(i);
                 userHistoryRef.child(dateStr).push().setValue(food);
             }
         }
+    }
+    private void getDate(){
+        now=System.currentTimeMillis();
+        dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        date = new Date(now);
+        dateStr =  dateFormat.format(date);
     }
 
 }

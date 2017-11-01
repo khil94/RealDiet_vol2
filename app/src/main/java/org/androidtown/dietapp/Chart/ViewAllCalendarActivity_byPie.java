@@ -6,12 +6,9 @@ package org.androidtown.dietapp.Chart;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,15 +19,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.handstudio.android.hzgrapherlib.animation.GraphAnimation;
 import com.handstudio.android.hzgrapherlib.graphview.CircleGraphView;
-import com.handstudio.android.hzgrapherlib.graphview.LineGraphView;
 import com.handstudio.android.hzgrapherlib.vo.GraphNameBox;
 import com.handstudio.android.hzgrapherlib.vo.circlegraph.CircleGraph;
 import com.handstudio.android.hzgrapherlib.vo.circlegraph.CircleGraphVO;
 
-
 import org.androidtown.dietapp.FoodItem;
 import org.androidtown.dietapp.R;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,22 +46,15 @@ public class ViewAllCalendarActivity_byPie extends android.support.v4.app.Fragme
 
         layoutGraphView = (ViewGroup) inflater.inflate(R.layout.activity_view_all_calendar_bypie, container, false);
 
-
-        if (user != null) {
-        } else {
-        }
-
         DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference userRef = RootRef.child("user").child(uid).child("basicCalorie");
         final DatabaseReference historyRef = RootRef.child("userHistory").child(uid);
+
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user_calorie = dataSnapshot.getValue(int.class);
-                Log.d("", "");
-                setCircleGraph();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -92,7 +79,7 @@ public class ViewAllCalendarActivity_byPie extends android.support.v4.app.Fragme
                     }
                     j=0;
                 }
-
+                setCircleGraph();
             }
 
             @Override
@@ -103,38 +90,13 @@ public class ViewAllCalendarActivity_byPie extends android.support.v4.app.Fragme
         return layoutGraphView;
     }
 
-    public int getCarbo() {
-        return carbo;
-    }
-
-    public void setCarbo(int carbo) {
-        this.carbo = carbo;
-    }
-
-    public int getProtein() {
-        return protein;
-    }
-
-    public void setProtein(int protein) {
-        this.protein = protein;
-    }
-
-    public int getFat() {
-        return fat;
-    }
-
-    public void setFat(int fat) {
-        this.fat = fat;
-    }
-
+    // drawing circle graph
     private void setCircleGraph() {
-
         CircleGraphVO vo = makeLineGraphAllSetting();
-
         layoutGraphView.addView(new CircleGraphView(getContext(),vo));
     }
 
-
+    // make circle graph
     private CircleGraphVO makeLineGraphAllSetting() {
         //BASIC LAYOUT SETTING
         //padding
@@ -189,5 +151,26 @@ public class ViewAllCalendarActivity_byPie extends android.support.v4.app.Fragme
         vo.setGraphNameBox(graphNameBox);
 
         return vo;
-}
+    }
+
+    // getter and setter
+    public int getCarbo() {
+        return carbo;
+    }
+    public void setCarbo(int carbo) {
+        this.carbo = carbo;
+    }
+    public int getProtein() {
+        return protein;
+    }
+    public void setProtein(int protein) {
+        this.protein = protein;
+    }
+    public int getFat() {
+        return fat;
+    }
+    public void setFat(int fat) {
+        this.fat = fat;
+    }
+
 }

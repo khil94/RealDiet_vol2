@@ -3,19 +3,13 @@
 package org.androidtown.dietapp.Chart;
 
 
-import android.app.Fragment;
-import android.content.Intent;
-
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import android.view.LayoutInflater;
 import android.view.View;
-
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,17 +18,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import com.handstudio.android.hzgrapherlib.animation.GraphAnimation;
 import com.handstudio.android.hzgrapherlib.graphview.LineGraphView;
 import com.handstudio.android.hzgrapherlib.vo.GraphNameBox;
 import com.handstudio.android.hzgrapherlib.vo.linegraph.LineGraph;
 import com.handstudio.android.hzgrapherlib.vo.linegraph.LineGraphVO;
 
-
-import org.androidtown.dietapp.EmailPasswordActivity;
 import org.androidtown.dietapp.FoodItem;
-import org.androidtown.dietapp.MainActivity;
-
 import org.androidtown.dietapp.R;
 
 import java.util.ArrayList;
@@ -53,7 +44,6 @@ public class ViewAllCalendarActivity extends android.support.v4.app.Fragment{
     String uid = user.getUid();
     int user_calorie;
     int dates;
-
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
@@ -91,7 +81,6 @@ public class ViewAllCalendarActivity extends android.support.v4.app.Fragment{
                         setUser_calorie(u_cal);
                         setLineGraph();
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
@@ -106,22 +95,8 @@ public class ViewAllCalendarActivity extends android.support.v4.app.Fragment{
         return layoutGraphView;
     }
 
-    public int getSum_of_calorie(int index) {
-        return sum_of_calorie[index];
-    }
-    public void setSum_of_calorie(int index, int value){
-        sum_of_calorie[index] = value;
-    }
-
-    private void setLineGraph() {
-        //all setting
-
-        LineGraphVO vo = makeLineGraphAllSetting();
-        layoutGraphView.addView(new LineGraphView(getContext(), vo));
-    }
+    // make line graph
     private LineGraphVO makeLineGraphAllSetting() {
-        //BASIC LAYOUT SETTING
-        //padding
 
         int paddingBottom 	= LineGraphVO.DEFAULT_PADDING;
         int paddingTop 		= LineGraphVO.DEFAULT_PADDING;
@@ -152,8 +127,8 @@ public class ViewAllCalendarActivity extends android.support.v4.app.Fragment{
 
         List<LineGraph> arrGraph = new ArrayList<LineGraph>();
 
-        arrGraph.add(new LineGraph("Calorie", 0xaa66ff33, graph1));
-        arrGraph.add(new LineGraph("user_calorie", 0xaa00ffff, graph2));
+        arrGraph.add(new LineGraph("Calorie", Color.RED, graph1));
+        arrGraph.add(new LineGraph("user_calorie", Color.BLACK, graph2));
 
         LineGraphVO vo = new LineGraphVO(
                 paddingBottom, paddingTop, paddingLeft, paddingRight,
@@ -166,6 +141,8 @@ public class ViewAllCalendarActivity extends android.support.v4.app.Fragment{
 
         return vo;
     }
+
+    //getter and setter
     public void setUser_calorie(int u_cal){
         this.user_calorie = u_cal;
     }
@@ -177,5 +154,17 @@ public class ViewAllCalendarActivity extends android.support.v4.app.Fragment{
     }
     public int getDates(){
         return dates;
+    }
+    public int getSum_of_calorie(int index) {
+        return sum_of_calorie[index];
+    }
+    public void setSum_of_calorie(int index, int value){
+        sum_of_calorie[index] = value;
+    }
+
+    //set drawing graph
+    private void setLineGraph() {
+        LineGraphVO vo = makeLineGraphAllSetting();
+        layoutGraphView.addView(new LineGraphView(getContext(), vo));
     }
 }
