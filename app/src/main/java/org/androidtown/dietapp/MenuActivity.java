@@ -31,6 +31,7 @@ import java.util.ArrayList;
     private RecyclerView recyclerView;
     private FoodAdapter adapter;
     private FirebaseUser user;
+    private String dateStr;
     public ArrayList<FoodItem> foodItemList;
 
 
@@ -48,8 +49,9 @@ import java.util.ArrayList;
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
+        dateStr = getIntent().getStringExtra("dateStr");
         database = FirebaseDatabase.getInstance();
-        userHistoryRef =database.getReference().child("user").child(user.getUid()).child("history");
+        userHistoryRef =database.getReference().child("userHistory").child(user.getUid()).child(dateStr);
         foodRef = database.getReference().child("food");
 
         foodItemList = new ArrayList<FoodItem>();
