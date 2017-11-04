@@ -8,10 +8,6 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <uses-sdk
-        android:minSdkVersion="20"
-        android:targetSdkVersion="25"/>
-
     <application
         tools:replace="android:icon"
         android:allowBackup="true"
@@ -29,6 +25,7 @@
         </activity>
         <activity android:name=".Chart.ChartActivity" />
         <activity android:name=".Chart.ViewCalendarActivity" />
+        <activity android:name=".Chart.ViewAllCalendarActivity"/>
         <activity android:name=".Chart.ViewHistoryDataActivity"/>
         <activity android:name=".EmailPasswordActivity" />
         <activity android:name=".UserInfoActivity" />

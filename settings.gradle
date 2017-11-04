@@ -1,2 +1,2 @@
-include ':app', ':chart', ':library'
+include ':app', ':library'
 project(':library').projectDir = new File('app/libs/HzGrapher-master/library')
